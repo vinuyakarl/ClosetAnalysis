@@ -5,6 +5,10 @@ WORKDIR /usr/local/app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy Alembic config and migration scripts
+COPY alembic.ini .
+COPY alembic ./alembic
+
 # Copy in the source code
 COPY src .
 EXPOSE 8080

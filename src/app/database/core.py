@@ -1,7 +1,10 @@
 import os
+from dotenv import load_dotenv
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
 
 # Get the env vars
 POSTGRES_USER = os.getenv("POSTGRES_USER")

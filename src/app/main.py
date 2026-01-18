@@ -2,7 +2,10 @@ from fastapi import FastAPI, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from app.database.core import get_db
+from app.database.core import engine, get_db
+from app.models import Base
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 @app.get("/")
