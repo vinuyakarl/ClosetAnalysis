@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi_pagination import add_pagination
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -13,6 +14,8 @@ app = FastAPI()
 
 # Routes defined from /routers dir
 app.include_router(itemsRoutes.router, prefix="/items", tags=["items"])
+
+add_pagination(app)
 @app.get("/")
 async def root():
     return {"message": "Hello World"}

@@ -13,7 +13,7 @@ class ItemBase(BaseModel):
 class ItemCreate(ItemBase):
     pass
 
-class ItemResponse(BaseModel):
+class ItemResponse(ItemBase):
     id: int
     created_at: datetime
 

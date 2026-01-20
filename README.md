@@ -54,7 +54,7 @@ Use this method to verify the app works in a production-like environment.
 #### **Setup**:
 1. **Build and Start Everything** This spins up both the API container and the DB container.
 ```
-docker-compose up --build -d
+docker-compose up --build
 ```
 2. **Run Migrations (Inside Docker)** Since the app is running inside a container, we must execute the migration command inside that container.
 ```
