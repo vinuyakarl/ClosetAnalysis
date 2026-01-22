@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.database.core import get_db
 
-from app.models import Item
-from app.schemas import itemSchema
+from app.models import Item, Wear
+from app.schemas import itemSchema, wearSchema
 
 router = APIRouter()
 
@@ -33,12 +33,23 @@ async def read_item(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Item not found")
     return db_item
 
+# Gets wears of an item
+@router.get("/{id}/wears", response_model=Page[wearSchema.WearResponse])
+async def read_wears(id: int, db: Session = Depends(get_db)):
+    db_item = db.query(Item).filter(Item.id == id).first()
+
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    query = db.query(Wear).filter(Wear.item_id == id)
+    return paginate(query)
+
 # Delete an item
-@router.delete("/{id}", response_model=itemSchema.ItemResponse)
+@router.delete("/{id}", status_code=204)
 async def delete_item(id: int, db: Session = Depends(get_db)):
     db_item = db.query(Item).filter(Item.id == id).first()
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
     db.delete(db_item)
     db.commit()
-    return db_item
+    return None
