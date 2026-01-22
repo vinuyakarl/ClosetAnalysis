@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy.orm import Session
@@ -26,5 +26,19 @@ async def create_item(item: itemSchema.ItemCreate, db: Session = Depends(get_db)
     return db_item
 
 # Get one item
+@router.get("/{id}", response_model=itemSchema.ItemResponse)
+async def read_item(id: int, db: Session = Depends(get_db)):
+    db_item = db.query(Item).filter(Item.id == id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return db_item
 
 # Delete an item
+@router.delete("/{id}", response_model=itemSchema.ItemResponse)
+async def delete_item(id: int, db: Session = Depends(get_db)):
+    db_item = db.query(Item).filter(Item.id == id).first()
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    db.delete(db_item)
+    db.commit()
+    return db_item
