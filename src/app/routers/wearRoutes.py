@@ -11,7 +11,7 @@ router = APIRouter()
 
 # Creates a wear instance
 @router.post("/", response_model=wearSchema.WearResponse)
-async def create_wear(wear: wearSchema.WearCreate, db: Session = Depends(get_db)):
+def create_wear(wear: wearSchema.WearCreate, db: Session = Depends(get_db)):
     # Check existence of object BEFORE adding to DB
     item = db.query(Item).get(wear.item_id)
 

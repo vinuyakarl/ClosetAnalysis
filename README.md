@@ -81,3 +81,9 @@ docker-compose down -v
 docker-compose up -d db
 alembic upgrade head
 ```
+
+## **Scripts**:
+To run the scripts:
+```
+docker compose exec api python scripts/seed.py
+```

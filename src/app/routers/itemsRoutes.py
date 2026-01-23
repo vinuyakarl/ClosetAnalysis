@@ -13,12 +13,12 @@ router = APIRouter()
 
 # Gets all the items
 @router.get("/", response_model=Page[itemSchema.ItemResponse])
-async def read_items(db: Session = Depends(get_db)):
+def read_items(db: Session = Depends(get_db)):
     return paginate(db.query(Item))
 
 # Creates an item
 @router.post("/", response_model=itemSchema.ItemResponse)
-async def create_item(item: itemSchema.ItemCreate, db: Session = Depends(get_db)):
+def create_item(item: itemSchema.ItemCreate, db: Session = Depends(get_db)):
     db_item = Item(**item.dict())
     db.add(db_item)
     db.commit()
@@ -27,7 +27,7 @@ async def create_item(item: itemSchema.ItemCreate, db: Session = Depends(get_db)
 
 # Get one item
 @router.get("/{id}", response_model=itemSchema.ItemResponse)
-async def read_item(id: int, db: Session = Depends(get_db)):
+def read_item(id: int, db: Session = Depends(get_db)):
     db_item = db.query(Item).filter(Item.id == id).first()
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -35,7 +35,7 @@ async def read_item(id: int, db: Session = Depends(get_db)):
 
 # Gets wears of an item
 @router.get("/{id}/wears", response_model=Page[wearSchema.WearResponse])
-async def read_wears(id: int, db: Session = Depends(get_db)):
+def read_wears(id: int, db: Session = Depends(get_db)):
     db_item = db.query(Item).filter(Item.id == id).first()
 
     if not db_item:
@@ -46,7 +46,7 @@ async def read_wears(id: int, db: Session = Depends(get_db)):
 
 # Delete an item
 @router.delete("/{id}", status_code=204)
-async def delete_item(id: int, db: Session = Depends(get_db)):
+def delete_item(id: int, db: Session = Depends(get_db)):
     db_item = db.query(Item).filter(Item.id == id).first()
     if not db_item:
         raise HTTPException(status_code=404, detail="Item not found")
